@@ -1,0 +1,15 @@
+# Streamlit secrets（パスワードをGitHubに公開しない）
+.streamlit/secrets.toml
+
+# 症例フォルダ（患者画像をGitHubに公開しない）
+cases/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 出力ファイル
+*.docx
+*.pdf
+03_output/
