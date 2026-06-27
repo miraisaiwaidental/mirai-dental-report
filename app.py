@@ -21,7 +21,8 @@ GOLD_BG   = (0xFE, 0xFB, 0xEE)
 GREEN     = (0x1E, 0x7E, 0x4E); GREEN_BG   = (0xEA, 0xF7, 0xEF)
 
 FONT_NAME = 'Noto Serif JP'
-LOGO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo_rgb.jpg')
+LOGO_PATH    = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo_rgb.jpg')
+DR_PHOTO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dr_photo.jpg')
 
 # ─── 医院情報 ───
 CLINIC_DATA = {
@@ -659,6 +660,9 @@ def generate_report(d):
     if brand == 'kochikai':
         for _k, _p in KOCHIKAI_PLAN_PRICES.items():
             if _k in plan_data_eff: plan_data_eff[_k]['price'] = _p
+    if not imgs.get('dr_photo') and os.path.exists(DR_PHOTO_PATH):
+        with open(DR_PHOTO_PATH, 'rb') as _f:
+            imgs = dict(imgs, dr_photo=_f.read())
 
     # ── PAGE 1 ──
     page_header(doc, f'{pname}様　専用　矯正診断レポート',
@@ -962,11 +966,13 @@ def generate_report(d):
     set_cell_padding(cs1,top=30,bottom=30,left=160)
     ar(cp(cs1),'費用・お支払いについて',bold=True,size=9,color=GOLD)
     np(doc,sa=2)
+    _faq_moderate = ('　　アライナー矯正 モデレート（770,000円）→ 月々 64,100円〜' if brand == 'kochikai'
+                     else '　　アライナー矯正 モデレート（660,000円）→ 月々 55,000円〜')
     faq_item('月々いくらから始められますか？',[
         ('デンタルクレジットで12回払い・金利0円でお支払いいただけます。',False,DARK),
         ('例）アライナー矯正 ミニマム（330,000円）→ 月々 27,500円〜',False,NAVY),
         ('　　アライナー矯正 ライト（440,000円）→ 月々 36,667円〜',False,NAVY),
-        ('　　アライナー矯正 モデレート（660,000円）→ 月々 55,000円〜',False,NAVY),
+        (_faq_moderate,False,NAVY),
         (f'▶  クリンチェック申込 33,000円 → 0円（期間限定・{exp_lbl}まで）',True,GOLD),
     ])
     faq_item('医療費控除は使えますか？いくら戻りますか？',[
@@ -1887,7 +1893,8 @@ with img_col2:
     after2_bytes  = _photo_selector('After ②',  'sel_a2', 'up_a2')
 with img_col3:
     st.markdown('**理事長写真（P.3）**')
-    dr_photo_bytes = _photo_selector('理事長の写真', 'sel_dr', 'up_dr')
+    st.caption('デフォルト写真が自動挿入されます')
+    dr_photo_bytes = _photo_selector('変更する場合のみアップロード', 'sel_dr', 'up_dr')
 
 st.markdown('---')
 
