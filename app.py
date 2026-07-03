@@ -142,7 +142,7 @@ def set_row_h(row, cm):
     tr = row._tr; trPr = tr.get_or_add_trPr()
     h = OxmlElement('w:trHeight'); h.set(qn('w:val'), str(int(cm*567))); trPr.append(h)
 
-def ar(para, text, bold=False, size=9, color=DARK, italic=False):
+def ar(para, text, bold=False, size=10, color=DARK, italic=False):
     r = para.add_run(text); r.bold=bold; r.italic=italic
     r.font.size=Pt(size); r.font.color.rgb=rgb(color)
     r.font.name = FONT_NAME
@@ -154,7 +154,7 @@ def ar(para, text, bold=False, size=9, color=DARK, italic=False):
     rF.set(qn('w:eastAsia'), FONT_NAME); rF.set(qn('w:cs'), FONT_NAME)
     return r
 
-def np(doc, text='', bold=False, size=9, color=DARK,
+def np(doc, text='', bold=False, size=10, color=DARK,
        align=WD_ALIGN_PARAGRAPH.LEFT, sb=0, sa=3):
     p = doc.add_paragraph()
     p.alignment=align; p.paragraph_format.space_before=Pt(sb)
@@ -215,9 +215,9 @@ def render_complaints_box(doc, complaints):
     for item in complaints:
         p = cp(c1) if first else cap(c1, sb=3)
         first = False
-        ar(p, f'・{item}', size=9, color=DARK)
+        ar(p, f'・{item}', size=10, color=DARK)
     p_close = cap(c1, sb=8)
-    ar(p_close, '今回の診断では、これらのお悩みと一致する所見が確認されました。', size=9, color=NAVY, italic=True)
+    ar(p_close, '今回の診断では、これらのお悩みと一致する所見が確認されました。', size=10, color=NAVY, italic=True)
     np(doc, sa=6)
 
 def render_conclusion_box(doc, conclusion_text, rec):
@@ -238,7 +238,7 @@ def render_conclusion_box(doc, conclusion_text, rec):
         if line.startswith('推奨プラン'):
             ar(p, line, bold=True, size=11, color=GOLD)
         else:
-            ar(p, line, size=9, color=DARK)
+            ar(p, line, size=10, color=DARK)
     np(doc, sa=8)
 
 def colored_block(doc, title, body, bg=LIGHT_BLUE, tc=NAVY, bc=DARK):
@@ -247,7 +247,7 @@ def colored_block(doc, title, body, bg=LIGHT_BLUE, tc=NAVY, bc=DARK):
     set_cell_bg(c,bg); set_cell_padding(c,top=80,bottom=80,left=180,right=180)
     p=cp(c); ar(p, title, bold=True, size=10, color=tc)
     if body:
-        p2=cap(c,sb=4); ar(p2, body, size=9, color=bc)
+        p2=cap(c,sb=4); ar(p2, body, size=10, color=bc)
     np(doc, sa=4)
 
 def embed_image_in_cell(cell, img_bytes, label, max_w=8.5, max_h=3.5):
@@ -271,7 +271,7 @@ def embed_image_in_cell(cell, img_bytes, label, max_w=8.5, max_h=3.5):
     set_cell_bg(cell, LGRAY_BG); set_cell_dashed_border(cell)
     set_cell_padding(cell, top=60, bottom=60)
     p = cp(cell); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-    ar(p, label, bold=True, size=9, color=GRAY)
+    ar(p, label, bold=True, size=10, color=GRAY)
     p2 = cap(cell, sb=4); p2.alignment=WD_ALIGN_PARAGRAPH.CENTER
     ar(p2, '（未設定）', size=8, color=(0xAA,0xAA,0xAA), italic=True)
 
@@ -625,7 +625,7 @@ def generate_report(d):
     # フォント設定（日本語含む全文字に適用）
     nml = doc.styles['Normal']
     nml.font.name = FONT_NAME
-    nml.font.size = Pt(9)
+    nml.font.size = Pt(10)
     nml_rPr = nml.element.get_or_add_rPr()
     nml_rF = nml_rPr.find(qn('w:rFonts'))
     if nml_rF is None:
@@ -707,7 +707,7 @@ def generate_report(d):
         for i,risk in enumerate(risks):
             cell=t_rb.cell(i,0); set_cell_bg(cell,AMBER_BG)
             set_cell_padding(cell,top=50,bottom=50,left=200)
-            ar(cp(cell),f'▶　{risk}',size=9,color=AMBER)
+            ar(cp(cell),f'▶　{risk}',size=10,color=AMBER)
         np(doc,sa=4)
 
     # ⑤ 治療によって期待できる変化
@@ -722,7 +722,7 @@ def generate_report(d):
         for i,benefit in enumerate(benefits):
             cell=t_bb.cell(i,0); set_cell_bg(cell,GREEN_BG)
             set_cell_padding(cell,top=50,bottom=50,left=200)
-            ar(cp(cell),f'◎　{benefit}',size=9,color=GREEN)
+            ar(cp(cell),f'◎　{benefit}',size=10,color=GREEN)
     np(doc,sa=6); doc.add_page_break()
 
     # ── PAGE 1.5（診断詳細）── ページ2冒頭に移動
@@ -739,9 +739,9 @@ def generate_report(d):
         p=cp(c)
         ar(p, f'{nums[i]}  ', bold=True, size=11, color=NAVY)
         ar(p, diag['item'], bold=True, size=11, color=NAVY)
-        ar(p, '　　重症度：', size=9, color=GRAY)
+        ar(p, '　　重症度：', size=10, color=GRAY)
         ar(p, diag['severity'], bold=True, size=10, color=GOLD)
-        p2=cap(c, sb=4); ar(p2, diag.get('description',''), size=9, color=DARK)
+        p2=cap(c, sb=4); ar(p2, diag.get('description',''), size=10, color=DARK)
         np(doc, sa=3)
     np(doc, sa=6); doc.add_page_break()
 
@@ -763,7 +763,7 @@ def generate_report(d):
             fc = WHITE; txt = pname_j
         set_cell_bg(c,bg); set_cell_padding(c,top=70,bottom=70)
         p=cp(c); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-        ar(p, txt, bold=True, size=9, color=fc)
+        ar(p, txt, bold=True, size=10, color=fc)
 
     row_labels=['治療期間','費用目安','対象範囲','スペース確保の方法','こんな方に']
     row_keys  =['period',  'price',   'approach','jaw',               'target']
@@ -771,7 +771,7 @@ def generate_report(d):
         row=pt.rows[i+1]
         c0=row.cells[0]; set_cell_bg(c0,LGRAY_BG)
         set_cell_padding(c0,top=55,bottom=55,left=120)
-        ar(cp(c0),lbl,bold=True,size=9,color=NAVY)
+        ar(cp(c0),lbl,bold=True,size=10,color=NAVY)
         for j in range(1,4):
             c=row.cells[j]
             pn = plans[j-1]['name'] if j-1 < len(plans) else None
@@ -779,7 +779,7 @@ def generate_report(d):
             if i%2==1: set_cell_bg(c,LIGHT_BLUE)
             set_cell_padding(c,top=55,bottom=55)
             p=cp(c); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-            ar(p,txt,size=9,color=DARK)
+            ar(p,txt,size=10,color=DARK)
 
     np(doc,sa=4)
     p_rec=np(doc,sb=2,sa=6)
@@ -794,7 +794,7 @@ def generate_report(d):
     set_cw(t_qr,0,13); set_cw(t_qr,1,5); set_row_h(t_qr.rows[0],3.0)
     cl_qr=t_qr.cell(0,0)
     set_cell_padding(cl_qr,top=60,bottom=60,left=150); set_cell_valign(cl_qr)
-    ar(cp(cl_qr),'推奨プランのシミュレーションはこちら　→',bold=True,size=9.5,color=NAVY)
+    ar(cp(cl_qr),'推奨プランのシミュレーションはこちら　→',bold=True,size=10.5,color=NAVY)
     embed_image_in_cell(t_qr.cell(0,1), qr_bytes,'QRコード',max_w=4.0,max_h=3.0)
     np(doc,sa=5)
 
@@ -806,9 +806,9 @@ def generate_report(d):
     set_cell_padding(cr_b,top=90,bottom=90,left=220,right=180)
     ar(cp(cr_b),'理事長　谷口正昭より',bold=True,size=10,color=GOLD)
     p_dc=cap(cr_b,sb=6); p_dc.paragraph_format.space_after=Pt(10)
-    ar(p_dc,f'「{comment}」',italic=True,size=9,color=DARK)
+    ar(p_dc,f'「{comment}」',italic=True,size=10,color=DARK)
     p_ds=cap(cr_b); p_ds.alignment=WD_ALIGN_PARAGRAPH.RIGHT
-    ar(p_ds,f'{org_name}　理事長　谷口 正昭',bold=True,size=9,color=GOLD)
+    ar(p_ds,f'{org_name}　理事長　谷口 正昭',bold=True,size=10,color=GOLD)
     np(doc,sa=4)
 
     # Payment
@@ -825,14 +825,14 @@ def generate_report(d):
         if i%2==0: set_cell_bg(cl2,LIGHT_BLUE); set_cell_bg(cr2,STRIPE)
         set_cell_padding(cl2,top=55,bottom=55,left=120)
         set_cell_padding(cr2,top=55,bottom=55,left=120)
-        ar(cp(cl2),lbl,bold=True,size=9,color=NAVY)
+        ar(cp(cl2),lbl,bold=True,size=10,color=NAVY)
         if i==2:
             base=cont.split(exp_lbl)[0]
-            ar(cp(cr2),base,size=9,color=DARK)
-            ar(cp(cr2) if False else cr2.paragraphs[0],exp_lbl,bold=True,size=9,color=GOLD)
-            cr2.paragraphs[0].add_run('まで有効').font.size=Pt(9)
+            ar(cp(cr2),base,size=10,color=DARK)
+            ar(cp(cr2) if False else cr2.paragraphs[0],exp_lbl,bold=True,size=10,color=GOLD)
+            cr2.paragraphs[0].add_run('まで有効').font.size=Pt(10)
         else:
-            ar(cp(cr2),cont,size=9,color=DARK)
+            ar(cp(cr2),cont,size=10,color=DARK)
     doc.add_page_break()
 
     # ── PAGE 3 ──
@@ -864,7 +864,7 @@ def generate_report(d):
     for j,w in enumerate([3.0,6.0,9.0]): set_cw(ct1,j,w)
     for j,(txt,bg) in enumerate([('',LGRAY_BG),('ワイヤー矯正',LGRAY),('マウスピース矯正',LIGHT_BLUE)]):
         c=ct1.cell(0,j); set_cell_bg(c,bg); set_cell_padding(c,top=60,bottom=60)
-        p=cp(c); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; ar(p,txt,bold=True,size=9,color=NAVY)
+        p=cp(c); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; ar(p,txt,bold=True,size=10,color=NAVY)
     for i,(lbl,wire,mp) in enumerate(c1r):
         row=ct1.rows[i+1]
         for j,(txt,align) in enumerate([(lbl,WD_ALIGN_PARAGRAPH.LEFT),(wire,WD_ALIGN_PARAGRAPH.CENTER),(mp,WD_ALIGN_PARAGRAPH.LEFT)]):
@@ -888,7 +888,7 @@ def generate_report(d):
     for j,w in enumerate([3.5,6.0,8.5]): set_cw(ct2,j,w)
     for j,(txt,bg,fc) in enumerate([('',LGRAY_BG,NAVY),('一般的なクリニック',LGRAY,DARK),(org_name,NAVY,WHITE)]):
         c=ct2.cell(0,j); set_cell_bg(c,bg); set_cell_padding(c,top=60,bottom=60)
-        p=cp(c); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; ar(p,txt,bold=True,size=9,color=fc)
+        p=cp(c); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; ar(p,txt,bold=True,size=10,color=fc)
     for i,(lbl,other,saiwai) in enumerate(c2r):
         row=ct2.rows[i+1]
         for j,(txt,align) in enumerate([(lbl,WD_ALIGN_PARAGRAPH.LEFT),(other,WD_ALIGN_PARAGRAPH.CENTER),(saiwai,WD_ALIGN_PARAGRAPH.LEFT)]):
@@ -916,7 +916,7 @@ def generate_report(d):
                  '★　SmarteeGS認定取得医\n　　日本全国でわずか数名のみ・日本初 SmarteeGS 実施 Dr',
                  '★　CBCT・セファロ・3D口腔内スキャン\n　　骨格レベルから治療を設計']:
         p_ci = cp(c_cr) if first else cap(c_cr,sb=6)
-        first=False; ar(p_ci,cred,size=9,color=NAVY)
+        first=False; ar(p_ci,cred,size=10,color=NAVY)
     np(doc,sa=5); doc.add_page_break()
 
     # ── PAGE 4 ──
@@ -935,7 +935,7 @@ def generate_report(d):
         pf = cap(cf, sb=(8 if i == 0 else 6))
         if i < len(fam_paras) - 1:
             pf.paragraph_format.space_after = Pt(6)
-        ar(pf, para, size=9, color=DARK)
+        ar(pf, para, size=10, color=DARK)
     pf3=cap(cf,sb=8); pf3.alignment=WD_ALIGN_PARAGRAPH.RIGHT
     ar(pf3,f'{org_name}　理事長　谷口 正昭',bold=True,size=8.5,color=GOLD)
     np(doc,sa=5)
@@ -947,7 +947,7 @@ def generate_report(d):
         fq=doc.add_table(rows=2,cols=1); set_no_border(fq); set_tw(fq)
         cq=fq.cell(0,0); set_cell_bg(cq,(0xF0,0xF4,0xF8))
         set_cell_padding(cq,top=45,bottom=45,left=160)
-        ar(cp(cq),'Q.　'+q,bold=True,size=9,color=NAVY)
+        ar(cp(cq),'Q.　'+q,bold=True,size=10,color=NAVY)
         ca=fq.cell(1,0)
         tc2=ca._tc; tcPr2=tc2.get_or_add_tcPr()
         tcB=OxmlElement('w:tcBorders'); lb=OxmlElement('w:left')
@@ -957,14 +957,14 @@ def generate_report(d):
         set_cell_padding(ca,top=45,bottom=55,left=180)
         for i,(line,bf,cf2) in enumerate(a_lines):
             p_a=cp(ca) if i==0 else cap(ca,sb=3)
-            ar(p_a,('A.　' if i==0 else '')+line,size=9,color=cf2,bold=bf)
+            ar(p_a,('A.　' if i==0 else '')+line,size=10,color=cf2,bold=bf)
         np(doc,sa=3)
 
     # Cost sub-header
     ts1=doc.add_table(rows=1,cols=1); set_no_border(ts1); set_tw(ts1)
     cs1=ts1.cell(0,0); set_cell_bg(cs1,GOLD_BG)
     set_cell_padding(cs1,top=30,bottom=30,left=160)
-    ar(cp(cs1),'費用・お支払いについて',bold=True,size=9,color=GOLD)
+    ar(cp(cs1),'費用・お支払いについて',bold=True,size=10,color=GOLD)
     np(doc,sa=2)
     _faq_moderate = ('　　アライナー矯正 モデレート（770,000円）→ 月々 64,100円〜' if brand == 'kochikai'
                      else '　　アライナー矯正 モデレート（660,000円）→ 月々 55,000円〜')
@@ -986,7 +986,7 @@ def generate_report(d):
     ts2=doc.add_table(rows=1,cols=1); set_no_border(ts2); set_tw(ts2)
     cs2=ts2.cell(0,0); set_cell_bg(cs2,LIGHT_BLUE)
     set_cell_padding(cs2,top=30,bottom=30,left=160)
-    ar(cp(cs2),'治療・生活について',bold=True,size=9,color=NAVY)
+    ar(cp(cs2),'治療・生活について',bold=True,size=10,color=NAVY)
     np(doc,sa=2)
     faq_item('治療中は痛いですか？',[
         ('マウスピース矯正はワイヤーに比べ痛みが少ないです。',False,DARK),
@@ -1018,7 +1018,7 @@ def generate_report(d):
          '本日ご確認いただいたシミュレーションと治療方針をもとに、治療開始に必要なお手続き・お支払い方法・開始時期をご案内いたします。'),
     ]
     for title, detail in _steps:
-        pt=cap(cn,sb=8); ar(pt, title, bold=True, size=9.5, color=GOLD)
+        pt=cap(cn,sb=8); ar(pt, title, bold=True, size=10.5, color=GOLD)
         pd=cap(cn,sb=2); ar(pd, detail, size=8.5, color=WHITE)
     cap(cn,sb=10)
     _closing = [
@@ -1070,7 +1070,7 @@ def generate_pedo_report(d):
         sec.top_margin=Cm(1.2); sec.bottom_margin=Cm(1.2)
         sec.left_margin=Cm(1.5); sec.right_margin=Cm(1.5)
     nml = doc.styles['Normal']
-    nml.font.name = FONT_NAME; nml.font.size = Pt(9)
+    nml.font.name = FONT_NAME; nml.font.size = Pt(10)
     nml_rPr = nml.element.get_or_add_rPr()
     nml_rF = nml_rPr.find(qn('w:rFonts'))
     if nml_rF is None:
@@ -1107,7 +1107,7 @@ def generate_pedo_report(d):
     set_no_border(t_guard); set_tw(t_guard)
     cg = t_guard.cell(0, 0); set_cell_bg(cg, GOLD_BG)
     set_cell_padding(cg, top=60, bottom=60, left=180, right=180)
-    ar(cp(cg), f'保護者 {guardian_name}様へ', bold=True, size=9, color=GOLD)
+    ar(cp(cg), f'保護者 {guardian_name}様へ', bold=True, size=10, color=GOLD)
     pg2 = cap(cg, sb=4)
     ar(pg2, f'このレポートは、本日のカウンセリングにご参加いただけなかった保護者の方に、{child_name}さんの診断内容をわかりやすくお伝えするために作成しました。ご家族でお読みいただき、ご不明な点はLINEまたはお電話でお気軽にご相談ください。', size=8.5, color=DARK)
     np(doc, sa=5)
@@ -1120,9 +1120,9 @@ def generate_pedo_report(d):
     c_cb = t_conc.cell(1, 0); set_cell_bg(c_cb, LIGHT_BLUE)
     set_cell_padding(c_cb, top=100, bottom=100, left=220, right=220)
     if findings:
-        ar(cp(c_cb), '確認された所見：', bold=True, size=9, color=NAVY)
+        ar(cp(c_cb), '確認された所見：', bold=True, size=10, color=NAVY)
         for fi in findings:
-            p_fi = cap(c_cb, sb=3); ar(p_fi, f'・{fi}', size=9, color=DARK)
+            p_fi = cap(c_cb, sb=3); ar(p_fi, f'・{fi}', size=10, color=DARK)
     p_rec = cap(c_cb, sb=10)
     ar(p_rec, '推奨プラン：', bold=True, size=11, color=GOLD)
     ar(p_rec, rec_device, bold=True, size=11, color=NAVY)
@@ -1154,7 +1154,7 @@ def generate_pedo_report(d):
         ar(p_fi, fi, bold=True, size=10, color=NAVY)
         if space_shortage and i == 0 and 'スペース不足' in fi:
             p_fi2 = cap(c_fi, sb=3)
-            ar(p_fi2, f'→ 不足量の目安：{space_shortage}', size=9, color=DARK)
+            ar(p_fi2, f'→ 不足量の目安：{space_shortage}', size=10, color=DARK)
         np(doc, sa=3)
     np(doc, sa=3)
     colored_block(doc,
@@ -1178,7 +1178,7 @@ def generate_pedo_report(d):
             cell = t_rb.cell(i, 0); set_cell_bg(cell, AMBER_BG)
             set_cell_padding(cell, top=60, bottom=60, left=200, right=180)
             lines = risk.split('\n')
-            ar(cp(cell), f'▶　{lines[0]}', size=9, color=AMBER, bold=True)
+            ar(cp(cell), f'▶　{lines[0]}', size=10, color=AMBER, bold=True)
             if len(lines) > 1:
                 p2 = cap(cell, sb=3); ar(p2, lines[1], size=8.5, color=DARK)
         np(doc, sa=5)
@@ -1187,6 +1187,41 @@ def generate_pedo_report(d):
         bg=LGRAY_BG, tc=DARK, bc=GRAY)
     np(doc, sa=4); doc.add_page_break()
 
+    # ── PAGE 3.5（想定歯並び写真）── 写真がある場合のみ
+    malo_photos = d.get('malocclusion_photos', [])
+    if malo_photos:
+        page_header(doc, f'{child_name}様　小児矯正診断レポート',
+                    '総括責任者：理事長　谷口正昭', dstr)
+        section_label(doc, 'このまま成長すると想定される歯並び')
+        t_malo_note = doc.add_table(rows=1, cols=1)
+        set_no_border(t_malo_note); set_tw(t_malo_note)
+        c_malo_note = t_malo_note.cell(0, 0); set_cell_bg(c_malo_note, AMBER_BG)
+        set_cell_padding(c_malo_note, top=70, bottom=70, left=180, right=180)
+        ar(cp(c_malo_note),
+           '現在の状態を放置した場合、成長に伴い以下のような歯並び・咬み合わせになる可能性があります。'
+           '将来のリスクを正しくご理解いただき、治療の必要性をご検討ください。',
+           size=10, color=AMBER)
+        np(doc, sa=5)
+        for _mi in range(0, len(malo_photos), 2):
+            _pair = malo_photos[_mi:_mi + 2]
+            _ncols = len(_pair)
+            t_mp = doc.add_table(rows=2, cols=_ncols)
+            set_border(t_mp, color=LGRAY, size=4); set_tw(t_mp)
+            for _j in range(_ncols):
+                set_cw(t_mp, _j, 18 // _ncols)
+            set_row_h(t_mp.rows[0], 4.5)
+            for _j, _ph in enumerate(_pair):
+                embed_image_in_cell(t_mp.cell(0, _j), _ph.get('bytes'), '参考写真', max_w=8.5, max_h=4.5)
+                _cl = t_mp.cell(1, _j)
+                set_cell_bg(_cl, AMBER_BG)
+                set_cell_padding(_cl, top=55, bottom=55, left=120, right=120)
+                _p_lbl = cp(_cl); _p_lbl.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                _lbl = _ph.get('label', '')
+                ar(_p_lbl, _lbl if _lbl else '（参考写真）',
+                   bold=True, size=10, color=AMBER if _lbl else GRAY)
+            np(doc, sa=5)
+        np(doc, sa=2); doc.add_page_break()
+
     # ── PAGE 4：今 vs 後で 比較表 ──
     page_header(doc, f'{child_name}様　小児矯正診断レポート',
                 '総括責任者：理事長　谷口正昭', dstr)
@@ -1194,7 +1229,7 @@ def generate_pedo_report(d):
     t_key = doc.add_table(rows=1, cols=1); set_no_border(t_key); set_tw(t_key)
     c_key = t_key.cell(0, 0); set_cell_bg(c_key, NAVY)
     set_cell_padding(c_key, top=70, bottom=70, left=180, right=180)
-    ar(cp(c_key), '小児矯正の目的は「単に歯並びを整えること」ではなく、「口元の機能を整えて、健康的な歯列を獲得すること」です', bold=True, size=9.5, color=WHITE)
+    ar(cp(c_key), '小児矯正の目的は「単に歯並びを整えること」ではなく、「口元の機能を整えて、健康的な歯列を獲得すること」です', bold=True, size=10.5, color=WHITE)
     np(doc, sa=5)
 
     compare_rows = [
@@ -1213,7 +1248,7 @@ def generate_pedo_report(d):
     for j, (txt, bg, fc) in enumerate([('比較項目',LGRAY_BG,DARK),('小児矯正「ブランベラボキッズ」',NAVY,WHITE),('成人矯正',LGRAY,DARK)]):
         c = ct.cell(0, j); set_cell_bg(c, bg); set_cell_padding(c, top=70, bottom=70)
         p = cp(c); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        ar(p, txt, bold=True, size=9, color=fc)
+        ar(p, txt, bold=True, size=10, color=fc)
     for i, (label, now_txt, later_txt) in enumerate(compare_rows):
         row = ct.rows[i+1]
         c0 = row.cells[0]; set_cell_bg(c0, LGRAY_BG)
@@ -1234,7 +1269,7 @@ def generate_pedo_report(d):
     set_cell_padding(c_rec2, top=80, bottom=80, left=180, right=180)
     ar(cp(c_rec2), 'Dr.推奨：今の成長期に小児矯正をスタートすることをおすすめします', bold=True, size=10, color=GOLD)
     p_rec2 = cap(c_rec2, sb=4)
-    ar(p_rec2, f'推奨治療プラン：{rec_device}　｜　治療期間：{period_1}　｜　費用：{cost_1}', size=9, color=DARK)
+    ar(p_rec2, f'推奨治療プラン：{rec_device}　｜　治療期間：{period_1}　｜　費用：{cost_1}', size=10, color=DARK)
     np(doc, sa=4); doc.add_page_break()
 
     # ── PAGE 5：理事長コメント ＋ ご家庭での協力 ──
@@ -1248,9 +1283,9 @@ def generate_pedo_report(d):
     set_cell_padding(cr_b, top=90, bottom=90, left=220, right=180)
     ar(cp(cr_b), '理事長　谷口正昭より　保護者の方へ', bold=True, size=10, color=GOLD)
     p_dc = cap(cr_b, sb=6); p_dc.paragraph_format.space_after = Pt(10)
-    ar(p_dc, f'「{comment}」', italic=True, size=9, color=DARK)
+    ar(p_dc, f'「{comment}」', italic=True, size=10, color=DARK)
     p_ds = cap(cr_b); p_ds.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    ar(p_ds, '医療法人 mirai　さいわいデンタルクリニック　理事長　谷口 正昭', bold=True, size=9, color=GOLD)
+    ar(p_ds, '医療法人 mirai　さいわいデンタルクリニック　理事長　谷口 正昭', bold=True, size=10, color=GOLD)
     np(doc, sa=6)
 
     section_label(doc, 'ご家庭でご協力いただきたいこと')
@@ -1259,7 +1294,7 @@ def generate_pedo_report(d):
     set_cell_padding(c_home, top=70, bottom=70, left=200, right=200)
     ar(cp(c_home), '小児矯正は、医院で装置を作るだけで完了する治療ではありません', bold=True, size=10, color=NAVY)
     p_hb = cap(c_home, sb=5)
-    ar(p_hb, 'ご家庭での装置使用やトレーニングの継続が治療の成果に直結します。医院とご家庭が一緒に取り組むことで、より良い結果を目指します。', size=9, color=DARK)
+    ar(p_hb, 'ご家庭での装置使用やトレーニングの継続が治療の成果に直結します。医院とご家庭が一緒に取り組むことで、より良い結果を目指します。', size=10, color=DARK)
     np(doc, sa=4)
     home_items = [
         ('装置の使用時間を守る', '決められた時間、装置を正しく使用してください。'),
@@ -1305,8 +1340,8 @@ def generate_pedo_report(d):
         set_cell_padding(cl2, top=55, bottom=55, left=120)
         set_cell_padding(cr2, top=55, bottom=55, left=120)
         is_sp = lbl.startswith('◎') or lbl.startswith('→')
-        ar(cp(cl2), lbl, bold=True, size=9, color=GOLD if is_sp else NAVY)
-        ar(cp(cr2), cont, size=9, color=DARK)
+        ar(cp(cl2), lbl, bold=True, size=10, color=GOLD if is_sp else NAVY)
+        ar(cp(cr2), cont, size=10, color=DARK)
     np(doc, sa=5)
 
     section_label(doc, '保護者の方からよくいただくご質問')
@@ -1315,7 +1350,7 @@ def generate_pedo_report(d):
         fq = doc.add_table(rows=2, cols=1); set_no_border(fq); set_tw(fq)
         cq = fq.cell(0, 0); set_cell_bg(cq, (0xF0, 0xF4, 0xF8))
         set_cell_padding(cq, top=45, bottom=45, left=160)
-        ar(cp(cq), 'Q.　'+q, bold=True, size=9, color=NAVY)
+        ar(cp(cq), 'Q.　'+q, bold=True, size=10, color=NAVY)
         ca = fq.cell(1, 0)
         tcPr2 = ca._tc.get_or_add_tcPr()
         tcB = OxmlElement('w:tcBorders'); lb = OxmlElement('w:left')
@@ -1325,7 +1360,7 @@ def generate_pedo_report(d):
         set_cell_padding(ca, top=45, bottom=55, left=180)
         for i, (line, bf, cf2) in enumerate(a_lines):
             p_a = cp(ca) if i == 0 else cap(ca, sb=3)
-            ar(p_a, ('A.　' if i == 0 else '')+line, size=9, color=cf2, bold=bf)
+            ar(p_a, ('A.　' if i == 0 else '')+line, size=10, color=cf2, bold=bf)
         np(doc, sa=3)
 
     pedo_faq('小児矯正をすれば、将来また矯正しなくて済みますか？', [
@@ -1362,7 +1397,7 @@ def generate_pedo_report(d):
         ('④ 治療を進める場合は装置作成・治療開始の手続きに進みます',
          '成長期の治療は開始時期も大切です。ご希望の場合は次回ご来院時に同意書・お支払い・装置作成の準備に進みます。'),
     ]:
-        pt2 = cap(cn, sb=8); ar(pt2, title, bold=True, size=9.5, color=GOLD)
+        pt2 = cap(cn, sb=8); ar(pt2, title, bold=True, size=10.5, color=GOLD)
         pd2 = cap(cn, sb=2); ar(pd2, detail, size=8.5, color=WHITE)
     cap(cn, sb=10)
     for line in ['小児矯正は、今すぐ決める必要はありません。',
@@ -1561,6 +1596,36 @@ if report_mode == '小児矯正':
         pedo_dr    = _photo_selector('理事長の写真（任意）', 'psel_pdr', 'pup_pdr')
 
     st.markdown('---')
+    st.markdown('### 🦷 このまま成長すると想定される歯並び（参考写真）')
+    st.caption('放置した場合に将来なりうる不正咬合の参考写真を選択してください。レポートに挿入してリスクを可視化します。最大4枚まで追加できます。')
+    _MALO_LABEL_OPTIONS = [
+        '（ラベルなし）',
+        '骨格性クラスII（出っ歯・上顎前突）',
+        '骨格性クラスIII（受け口・下顎前突）',
+        'Hyperdivergent（開咬傾向・垂直骨格）',
+        'Hypodivergent（過蓋咬合傾向・水平骨格）',
+        '叢生（歯のガタガタ・乱杭歯）',
+        '開咬（前歯が噛まない状態）',
+        '過蓋咬合（深い噛み合わせ）',
+        '交叉咬合（クロスバイト）',
+        '上顎歯列の狭窄（アーチが狭い）',
+        '空隙歯列（すきっ歯）',
+        '正中線のズレ',
+    ]
+    pedo_malo_photos = []
+    malo_c1, malo_c2 = st.columns(2)
+    for _mi in range(4):
+        with (malo_c1 if _mi % 2 == 0 else malo_c2):
+            _mup = st.file_uploader(f'参考写真 {_mi + 1}', type=['jpg','jpeg','png'], key=f'malo_photo_{_mi}')
+            _mlbl_sel = st.selectbox('不正咬合の種類', _MALO_LABEL_OPTIONS, key=f'malo_label_sel_{_mi}')
+            _mlbl_free = st.text_input('ラベル（自由入力）', key=f'malo_label_free_{_mi}', placeholder='例：叢生が進行した状態')
+            _mlabel = _mlbl_free.strip() if _mlbl_free.strip() else (_mlbl_sel if _mlbl_sel != '（ラベルなし）' else '')
+            _mbytes = read_file(_mup) if _mup else None
+            if _mbytes:
+                st.image(_mbytes, width=150)
+            pedo_malo_photos.append({'bytes': _mbytes, 'label': _mlabel})
+
+    st.markdown('---')
     p_btn_col, p_info_col = st.columns([1, 3])
     with p_btn_col:
         pedo_gen_btn = st.button('📄　小児矯正レポートを生成', use_container_width=True)
@@ -1590,6 +1655,7 @@ if report_mode == '小児矯正':
                     'risks_pedo':          pedo_risks,
                     'dr_comment':          pedo_comment,
                     'expiry_str':          pedo_exp_str,
+                    'malocclusion_photos': [p for p in pedo_malo_photos if p['bytes']],
                     'images': {
                         'face_front': pedo_face_front,
                         'face_side':  pedo_face_side,
